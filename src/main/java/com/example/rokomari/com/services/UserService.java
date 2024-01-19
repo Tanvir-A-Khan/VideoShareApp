@@ -1,6 +1,8 @@
 package com.example.rokomari.com.services;
 
 import com.example.rokomari.com.api.models.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -9,15 +11,17 @@ import java.util.UUID;
 
 @Service
 public class UserService {
-    private List<User> store = new ArrayList<>();
-    public UserService(){
-        store.add(new User(UUID.randomUUID().toString(), "Tanvir0","Tanvir0@gmail.com"));
-        store.add(new User(UUID.randomUUID().toString(), "Tanvi1","Tanvir1@gmail.com"));
-        store.add(new User(UUID.randomUUID().toString(), "Tanvir2","Tanvir2@gmail.com"));
-        store.add(new User(UUID.randomUUID().toString(), "Tanvir3","Tanvir3@gmail.com"));
+    private final MongoTemplate mongoTemplate;
+
+    @Autowired
+    public UserService(MongoTemplate mongoTemplate) {
+        this.mongoTemplate = mongoTemplate;
     }
 
-    public List<User> getUsers(){
-        return this.store;
+    public void addUser(User user) {
+        mongoTemplate.save(user);
+    }
+    public List<User> getUsers() {
+        return mongoTemplate.findAll(User.class);
     }
 }

@@ -3,9 +3,7 @@ package com.example.rokomari.com.api.controller;
 import com.example.rokomari.com.api.models.User;
 import com.example.rokomari.com.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
@@ -22,6 +20,12 @@ public class UserController {
     public List<User> getUser(){
         System.out.println("getting user");
         return this.userService.getUsers();
+    }
+    @PostMapping("/user")
+    public List<User> addUser(@RequestBody User user) {
+        System.out.println("Adding user: " + user);
+        userService.addUser(user);
+        return userService.getUsers();
     }
 
     @GetMapping("/currentuser")

@@ -5,19 +5,22 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@Document(collection = "users")
-public class User {
+@Document(collection = "videos")
+public class Video {
     @Id
-    private String userId;
-    private String name;
-    private String email;
-    private List<Video> uploadedVideos;
+    private String videoId;
+    private String videoTitle;
+    private String uploaderName;
+    private String videoLink;
+    private Long viewCount;
+    private List<User> likes;
+    private List<User> disLikes;
+
 
 }
