@@ -1,6 +1,7 @@
 package com.example.VideoShareApp.services;
 
 import com.example.VideoShareApp.model.Video;
+import com.example.VideoShareApp.repository.VideoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -51,5 +52,27 @@ public class VideoService {
         ));
         return mongoTemplate.find(query, Video.class);
     }
+
+
+    /// =================================================================================================
+//    @Autowired
+//    private VideoRepository videoRepository;
+//
+//    // Existing methods...
+//
+//    public void addUserNameToLikes(String videoId, String userName) {
+//        Optional<Video> optionalVideo = videoRepository.findById(videoId);
+//
+//        if (optionalVideo.isPresent()) {
+//            Video video = optionalVideo.get();
+//            List<String> likes = video.getLikes();
+//
+//            // Check if the userName is already in the likes list
+//            if (!likes.contains(userName)) {
+//                likes.add(userName);  // Add the userName to the likes list
+//                videoRepository.save(video);  // Save the updated video to the repository
+//            }
+//        }
+//    }
 
 }

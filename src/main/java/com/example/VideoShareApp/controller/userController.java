@@ -9,32 +9,51 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/v1")
+@CrossOrigin(origins = "http://localhost:5173/")
 public class userController {
     @Autowired
     private UserService userService;
 
     //http://localhost:8080/home/user
-    @GetMapping("/get")
+    @GetMapping("/user")
     public List<User> getUser(){
         System.out.println("getting user");
         return this.userService.getUsers();
     }
-    @PostMapping("/post")
+    @PostMapping("/user")
     public List<User> addUser(@RequestBody User user) {
         System.out.println("Adding user: " + user);
         userService.addUser(user);
         return userService.getUsers();
     }
 
-    @GetMapping("/getuserentity")
-    public ResponseEntity<List<User>> getUserz(){
-        System.out.println("getting user");
-                this.userService.getUsers();
-        return new ResponseEntity<>(this.userService.getUsers(), HttpStatus.OK);
+    @GetMapping("/get-by-email")
+    public User addUser(@RequestParam String email) {
+        return userService.findByEmail(email);
     }
+
+    @GetMapping("/login")
+    public ResponseEntity<User> findUserByEmailAndPassword(
+            @RequestParam String email,
+            @RequestParam String password) {
+
+        Optional<User> userOptional = userService.findUserByEmailAndPassword(email, password);
+
+        return userOptional
+                .map(user -> ResponseEntity.ok().body(user))
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+//    @GetMapping("/getuserentity")
+//    public ResponseEntity<List<User>> getUserz(){
+//        System.out.println("getting user");
+//                this.userService.getUsers();
+//        return new ResponseEntity<>(this.userService.getUsers(), HttpStatus.OK);
+//    }
 
 //    @GetMapping("/{id}")
 //    public ResponseEntity<User> getSingleUser(@PathVariable String email){

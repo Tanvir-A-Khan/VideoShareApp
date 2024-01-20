@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/videos")
+@RequestMapping("/v1/videos")
 @CrossOrigin(origins = "http://localhost:5173/")
 public class VideoController {
 
@@ -22,23 +22,37 @@ public class VideoController {
         this.videoService = videoService;
     }
 
-    @PostMapping
+    @GetMapping("/get-all-videos")
+    public ResponseEntity<List<Video>> getAllVideos() {
+        List<Video> videos = videoService.getAllVideos();
+        return new ResponseEntity<>(videos, HttpStatus.OK);
+    }
+
+    @PostMapping("/add-a-video")
     public ResponseEntity<Video> saveVideo(@RequestBody Video video) {
         Video savedVideo = this.videoService.saveVideo(video);
         return new ResponseEntity<>(savedVideo, HttpStatus.CREATED);
     }
 
-    @GetMapping
-    public ResponseEntity<List<Video>> getAllVideos() {
-        List<Video> videos = videoService.getAllVideos();
-        return new ResponseEntity<>(videos, HttpStatus.OK);
-    }
 
     @GetMapping("/{videoId}")
     public ResponseEntity<Video> getVideoById(@PathVariable String videoId) {
         Optional<Video> video = videoService.getVideoById(videoId);
         return video.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
+
+    // OK
+
+
+
+//    @PutMapping("/{videoId}/add-like")
+//    public ResponseEntity<Void> addUserNameToLikes(@PathVariable String videoId, @RequestBody String userName) {
+////        videoService.addUserNameToLikes(videoId, userName);
+//        return ResponseEntity.ok().build();
+//    }
+
+
+
 
     @PutMapping("/{videoId}")
     public ResponseEntity<Video> updateVideo(@PathVariable String videoId, @RequestBody Video video) {

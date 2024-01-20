@@ -2,6 +2,7 @@ package com.example.VideoShareApp.model;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Reference;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
@@ -21,9 +22,10 @@ public class Video {
     private String videoLink;
     private Long viewCount;
 
-    private List<User> likes;
 
-    private List<User> disLikes;
+    private List<String> likes;
+
+    private List<String> disLikes;
 
 
 }

@@ -1,6 +1,7 @@
 package com.example.VideoShareApp.services;
 
 import com.example.VideoShareApp.model.User;
+import com.example.VideoShareApp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -14,9 +15,19 @@ import java.util.Optional;
 public class UserService {
     private final MongoTemplate mongoTemplate;
 
-    @Autowired
-    public UserService(MongoTemplate mongoTemplate) {
+    private final UserRepository userRepository;
+
+    public UserService(MongoTemplate mongoTemplate, UserRepository userRepository) {
         this.mongoTemplate = mongoTemplate;
+        this.userRepository = userRepository;
+    }
+
+    public  User findByEmail(String email){
+        return  userRepository.findByEmail(email).stream().findFirst().orElseGet(null);
+    }
+
+    public Optional<User> findUserByEmailAndPassword(String email, String password) {
+        return userRepository.findByEmailAndPassword(email, password);
     }
 
     public void addUser(User user) {
@@ -25,7 +36,7 @@ public class UserService {
     public List<User> getUsers() {
         return mongoTemplate.findAll(User.class);
     }
-
+//
 //    public Optional<User> getUserByEmail(String email)  {
 //        Query query = new Query();
 //        query.addCriteria(Criteria.where("email").is(email));
