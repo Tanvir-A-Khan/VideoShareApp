@@ -18,7 +18,6 @@ public class userController {
     @Autowired
     private UserService userService;
 
-    //http://localhost:8080/home/user
     @GetMapping("/user")
     public List<User> getUser(){
         System.out.println("getting user");
@@ -47,17 +46,5 @@ public class userController {
                 .map(user -> ResponseEntity.ok().body(user))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
-
-//    @GetMapping("/getuserentity")
-//    public ResponseEntity<List<User>> getUserz(){
-//        System.out.println("getting user");
-//                this.userService.getUsers();
-//        return new ResponseEntity<>(this.userService.getUsers(), HttpStatus.OK);
-//    }
-
-//    @GetMapping("/{id}")
-//    public ResponseEntity<User> getSingleUser(@PathVariable String email){
-//        return
-//    }
 
 }

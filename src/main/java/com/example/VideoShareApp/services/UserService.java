@@ -1,7 +1,9 @@
 package com.example.VideoShareApp.services;
 
 import com.example.VideoShareApp.model.User;
+import com.example.VideoShareApp.model.Video;
 import com.example.VideoShareApp.repository.UserRepository;
+import com.example.VideoShareApp.repository.VideoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -36,18 +38,7 @@ public class UserService {
     public List<User> getUsers() {
         return mongoTemplate.findAll(User.class);
     }
-//
-//    public Optional<User> getUserByEmail(String email)  {
-//        Query query = new Query();
-//        query.addCriteria(Criteria.where("email").is(email));
-//
-//        try {
-//            return Optional.ofNullable(mongoTemplate.findOne(query, User.class));
-//        } catch (Exception e) {
-//            // Handle potential exceptions (e.g., MongoException)
-//            System.err.println("Error retrieving user: " + e.getMessage());
-//            return Optional.empty();
-//        }
-//    }
+
+
 
 }
