@@ -117,5 +117,9 @@ public class VideoService {
     }
 
 
+    public List<Video> getVideosByUploaderName(String uploaderName) {
+        return videoRepository.findByUploaderName(uploaderName);
+    }
+
 
 }

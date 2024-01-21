@@ -63,6 +63,13 @@ public class VideoController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/list/{uploaderName}")
+    public ResponseEntity<List<Video>> getVideosByUploaderName(@PathVariable String uploaderName) {
+        System.out.println(uploaderName);
+        List<Video> videos = videoService.getVideosByUploaderName(uploaderName);
+        return ResponseEntity.ok(videos);
+    }
+
 
 
 }
