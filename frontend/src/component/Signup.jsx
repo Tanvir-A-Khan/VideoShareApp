@@ -1,17 +1,40 @@
+import axios from 'axios';
 import { useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
 
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 
 function Signup() {
+    const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [username, setUsername] = useState('');
     const [error, setError] = useState(null);
 
-    const handleSignup = (e) => {
+    const handleSignup = async(e) => {
         e.preventDefault();
+        const newUser = {
+            
+            "name": username,
+            "email": email,
+            "password": password,
+            "uploadedVideos": []
+        
+        }
+
+        try {
+            
+            const res = await axios.post('http://localhost:8080/v1/user', newUser);
+
+            console.log(res);
+            
+            navigate("/login")
+
+          } catch (error) {
+            setError(error)
+            console.error('Error fetching or adding data:', error);
+          }
 
 
 
