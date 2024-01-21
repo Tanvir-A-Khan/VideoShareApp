@@ -15,10 +15,12 @@ import java.util.Optional;
 public class VideoService {
 
     private final MongoTemplate mongoTemplate;
+    private final VideoRepository videoRepository;
 
     @Autowired
-    public VideoService(MongoTemplate mongoTemplate) {
+    public VideoService(MongoTemplate mongoTemplate, VideoRepository videoRepository) {
         this.mongoTemplate = mongoTemplate;
+        this.videoRepository = videoRepository;
     }
 
     public Video saveVideo(Video video) {
@@ -30,49 +32,90 @@ public class VideoService {
         return mongoTemplate.findAll(Video.class);
     }
 
-    public Optional<Video> getVideoById(String videoId) {
-        Query query = new Query();
-        query.addCriteria(Criteria.where("videoId").is(videoId));
-        return Optional.ofNullable(mongoTemplate.findOne(query, Video.class));
+    public Optional<Video> getVideoByIdAndView(String videoId) {
+        Optional<Video> optionalVideo = videoRepository.findById(videoId);
+
+        if (optionalVideo.isPresent()) {
+            Video video = optionalVideo.get();
+
+            // Increment the viewCount
+            video.setViewCount(video.getViewCount() + 1);
+
+            // Save the updated video
+            videoRepository.save(video);
+
+            return Optional.of(video);
+        } else {
+            // Handle not found scenario
+            // You might want to throw an exception or handle it based on your application's logic
+            return Optional.empty();
+        }
     }
-    public void updateVideo(Video video) {
-        mongoTemplate.save(video);
+    public Optional<Video> getVideoByIdAndAddLike(String videoId, String userName) {
+        Optional<Video> optionalVideo = videoRepository.findById(videoId);
+
+        if (optionalVideo.isPresent()) {
+            Video video = optionalVideo.get();
+            List<String> likes = video.getLikes();
+            List<String> dislikes = video.getDisLikes();
+
+            // Check if the user's name is in the likes list
+            if (likes.contains(userName)) {
+                // If the user already liked, remove from the likes list
+                likes.remove(userName);
+            } else {
+
+                if(dislikes.contains(userName)){
+                    dislikes.remove(userName);
+                }
+                // If the user didn't like, add to the likes list
+                likes.add(userName);
+            }
+
+            // Save the updated video
+            videoRepository.save(video);
+
+            return Optional.of(video);
+        } else {
+            // Handle not found scenario
+            // You might want to throw an exception or handle it based on your application's logic
+            return Optional.empty();
+        }
     }
 
-    public void deleteVideo(String videoId) {
-        Query query = new Query(Criteria.where("videoId").is(videoId));
-        mongoTemplate.remove(query, Video.class);
+    public Optional<Video> getVideoByIdAndToggleDislike(String videoId, String userName) {
+        Optional<Video> optionalVideo = videoRepository.findById(videoId);
+
+        if (optionalVideo.isPresent()) {
+            Video video = optionalVideo.get();
+            List<String> likes = video.getLikes();
+            List<String> dislikes = video.getDisLikes();
+
+            // Check if the user's name is in the dislikes list
+            if (dislikes.contains(userName)) {
+                // If the user already disliked, remove from the dislikes list
+                dislikes.remove(userName);
+            } else {
+                // If the user didn't dislike, add to the dislikes list
+                dislikes.add(userName);
+
+                // If the user already liked, remove from the likes list
+                if (likes.contains(userName)) {
+                    likes.remove(userName);
+                }
+            }
+
+            // Save the updated video
+            videoRepository.save(video);
+
+            return Optional.of(video);
+        } else {
+            // Handle not found scenario
+            // You might want to throw an exception or handle it based on your application's logic
+            return Optional.empty();
+        }
     }
 
-    public List<Video> searchVideos(String searchTerm) {
-        Query query = new Query();
-        query.addCriteria(new Criteria().orOperator(
-                Criteria.where("videoTitle").regex(searchTerm, "i"),
-                Criteria.where("uploaderName").regex(searchTerm, "i")
-        ));
-        return mongoTemplate.find(query, Video.class);
-    }
 
-
-    /// =================================================================================================
-//    @Autowired
-//    private VideoRepository videoRepository;
-//
-//    // Existing methods...
-//
-//    public void addUserNameToLikes(String videoId, String userName) {
-//        Optional<Video> optionalVideo = videoRepository.findById(videoId);
-//
-//        if (optionalVideo.isPresent()) {
-//            Video video = optionalVideo.get();
-//            List<String> likes = video.getLikes();
-//
-//            // Check if the userName is already in the likes list
-//            if (!likes.contains(userName)) {
-//                likes.add(userName);  // Add the userName to the likes list
-//                videoRepository.save(video);  // Save the updated video to the repository
-//            }
-//        }
-//    }
 
 }
