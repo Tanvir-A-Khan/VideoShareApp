@@ -1,4 +1,5 @@
 
+// import { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
@@ -9,26 +10,30 @@ import { useNavigate } from 'react-router-dom';
 
 function NavScrollExample() {
   const navigate = useNavigate();
-  console.log(localStorage.getItem('log'));
+
+  JSON.parse(localStorage.getItem('user'))?.userId
 
 
 
-  const handleLogout = ()=>{
-  
-}
+
+  const handleLogout = (e)=>{
+    e.preventDefault();
+    localStorage.clear();
+    navigate("/")
+    
+  }
   const handleSignup = (e)=>{
     e.preventDefault();
     navigate("/login")
   }
+
   const gotoHome = ()=>{
     navigate("/")
   }
-  const handleAddRepo = ()=>{
-    navigate("/createrepo")
+  const handleDash = ()=>{
+    navigate("/dashboard")
   }
-  const handleMyRepo = ()=>{
-    navigate("/createrepo")
-  }
+
   return (
     <Navbar expand="lg" className="bg-body-tertiary ps-5 pe-5">
       <Container fluid>
@@ -46,15 +51,15 @@ function NavScrollExample() {
           <Form className="d-flex">
         
             {
-                 localStorage.getItem('log') 
+                 JSON.parse(localStorage.getItem('user'))?.userId
                  ?
-                 <Nav.Link className='p-2 w-50 ps-3' onClick={handleAddRepo}>Dashboard</Nav.Link>
+                 <Nav.Link className='p-2 w-50 ps-3' onClick={handleDash}>Dashboard</Nav.Link>
                  :
                  null
             }
 
             {
-                 localStorage.getItem('log') 
+                 JSON.parse(localStorage.getItem('user'))?.userId
                  ?
              
                  <Button className='bg-danger ms-2'onClick={handleLogout}>Logout</Button>
